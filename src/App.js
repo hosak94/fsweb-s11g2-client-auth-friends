@@ -1,49 +1,52 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Routes, Route, Redirect } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import { AuthContext } from "./context/AuthContext";
-
-const localStorageKey = "s11g20223";
+import FriendsList from "./components/FriendsList";
+import Friend from "./components/Friend";
+import AddFriend from "./components/AddFriend";
+import Header from "./components/Header";
+const localStorageKey = "S11G20223";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loggedInToken, setLoggedInToken] = useState(null);
+  const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [loggedInToken, setloggedInToken] = useState(null);
 
   useEffect(() => {
     const token = window.localStorage.getItem(localStorageKey);
+
     if (token) {
-      setIsLoggedIn(true);
-      setLoggedInToken(token);
+      setisLoggedIn(true);
+      setloggedInToken(token);
     }
   }, [isLoggedIn]);
 
   return (
     <AuthContext.Provider
       value={{
-        loggedInToken,
-        setIsLoggedIn,
+        setisLoggedIn,
         isLoggedIn,
-        setLoggedInToken,
+        setloggedInToken,
         localStorageKey,
+        loggedInToken,
       }}
     >
       <div className="App">
+        <Header />
         <Routes>
           <Route exact path="/" element={<LoginForm />} />
           <Route path="/login" element={<LoginForm />} />
 
-          {/* <Route
-          render={() =>
-            isLoggedIn ? <FriendsList /> : <Redirect to="/login" />
-          }
-          exact
-          path="/friends-list"
-        />
-
-        <Route path="/friends/add" element={<AddFriend />} />
-
-        <Route path="/friends/:id" element={<Friend />} /> */}
+          <Route
+            path="/friends/:id"
+            element={<Friend localStorageKey={localStorageKey} />}
+          />
+          <Route path="/friends-list" element={<FriendsList />} />
+          <Route
+            path="/friends/add"
+            element={<AddFriend localStorageKey={localStorageKey} />}
+          />
         </Routes>
       </div>
     </AuthContext.Provider>

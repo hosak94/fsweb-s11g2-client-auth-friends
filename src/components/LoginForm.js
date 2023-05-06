@@ -7,9 +7,13 @@ const LoginForm = () => {
   const [loginUser, setLoginUser] = useState({});
 
   const navigate = useNavigate();
-
-  const { setIsLoggedIn, isLoggedIn, setLoggedInToken, localStorageKey } =
-    useContext(AuthContext);
+  const {
+    setisLoggedIn,
+    setloggedInToken,
+    isLoggedIn,
+    loggedInToken,
+    localStorageKey,
+  } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setLoginUser({ ...loginUser, [e.target.name]: e.target.value });
@@ -19,20 +23,20 @@ const LoginForm = () => {
     if (isLoggedIn) {
       navigate("/friends-list");
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const myLogin = () => {
     axios
       .post("http://localhost:9000/api/login", loginUser)
       .then(function (response) {
         console.log(response);
-        setIsLoggedIn(true);
-        setLoggedInToken(response.data.token);
+        setisLoggedIn(true);
+        setloggedInToken(response.data.token);
         localStorage.setItem(localStorageKey, response.data.token);
       })
       .catch(function (error) {
         console.log(error);
-        setIsLoggedIn(false);
+        setisLoggedIn(false);
         localStorage.clear();
       });
   };
@@ -48,20 +52,15 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit}>
           <div>
             <h2>USERNAME</h2>
-            <input
-              name="username"
-              //   value={loginUser.username}
-              onChange={handleChange}
-            />
+            <input name="username" onChange={handleChange}></input>
           </div>
           <div>
             <h2>PASSWORD</h2>
             <input
               type="password"
               name="password"
-              //   value={loginUser.password}
               onChange={handleChange}
-            />
+            ></input>
           </div>
           <button type="submit">SUBMIT</button>
         </form>
